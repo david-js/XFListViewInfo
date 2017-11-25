@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ListInfoDemo"
+             x:Class="ListInfoDemo.MainPage">
+
+    <StackLayout VerticalOptions="FillAndExpand" BindingContext="{x:Reference MyList}" Padding="0,20,0,0">
+        <Label Text="{Binding AtStartOfList, StringFormat='At start of list: {0}'}" FontSize="Large"></Label>
+        <Label Text="{Binding LastScrollDirection, StringFormat='Last scroll direction: {0}'}" FontSize="Large"></Label>
+        <BoxView HeightRequest="2" WidthRequest="150" Color="Black"></BoxView>
+        <local:MyListView ItemsSource="{x:Static local:MainPage.Movies}" x:Name="MyList">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}" Detail="{Binding Rating, StringFormat='I give it {0} out of 5'}"></TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </local:MyListView>
+    </StackLayout>
+
+</ContentPage>
