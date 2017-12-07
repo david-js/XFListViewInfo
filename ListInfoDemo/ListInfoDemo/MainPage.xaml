@@ -8,6 +8,7 @@
         <Label Text="{Binding AtStartOfList, StringFormat='At start of list: {0}'}" FontSize="Large"></Label>
         <Label Text="{Binding LastScrollDirection, StringFormat='Last scroll direction: {0}'}" FontSize="Large"></Label>
         <BoxView HeightRequest="2" WidthRequest="150" Color="Black"></BoxView>
+        <SearchBar IsVisible="{Binding ShouldShowSearchBar}"></SearchBar>
         <local:MyListView ItemsSource="{x:Static local:MainPage.Movies}" x:Name="MyList">
             <ListView.ItemTemplate>
                 <DataTemplate>
