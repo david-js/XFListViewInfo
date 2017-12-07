@@ -9,3 +9,5 @@ For the custom renderers, see:
 - ListInfoDemo/ListInfoDemo.UWP/MyListViewRenderer.cs
 
 For a writeup of the techniques used, see http://criticalhittech.com/2017/11/14/observing-listview-scrolling-in-xamarin-forms/
+
+This now includes a SearchBar, which appears and disappears above the ListView as the user is scrolling. The SearchBar doesn't actually do anything, but it does show how to make a SearchBar behave visually in this way. See http://criticalhittech.com/2017/12/07/disappearing-searchbar-for-xamarin-forms/ for explanation, and virtually all of the interesting code for this is in ListInfoDemo/ListInfoDemo/MyListView.cs.
