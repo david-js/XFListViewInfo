@@ -4,12 +4,14 @@
              xmlns:local="clr-namespace:ListInfoDemo"
              x:Class="ListInfoDemo.MainPage">
 
-    <StackLayout VerticalOptions="FillAndExpand" BindingContext="{x:Reference MyList}" Padding="0,20,0,0">
-        <Label Text="{Binding AtStartOfList, StringFormat='At start of list: {0}'}" FontSize="Large"></Label>
-        <Label Text="{Binding LastScrollDirection, StringFormat='Last scroll direction: {0}'}" FontSize="Large"></Label>
+    <StackLayout VerticalOptions="FillAndExpand" Padding="0,20,0,0">
+        <Label Text="{Binding IsAtStartOfList, StringFormat='At start of list: {0}'}" FontSize="Large"></Label>
+        <Label Text="{Binding ScrollingDirection, StringFormat='Last scroll direction: {0}'}" FontSize="Large"></Label>
         <BoxView HeightRequest="2" WidthRequest="150" Color="Black"></BoxView>
         <SearchBar IsVisible="{Binding ShouldShowSearchBar}"></SearchBar>
-        <local:MyListView ItemsSource="{x:Static local:MainPage.Movies}" x:Name="MyList">
+        <local:MyListView ItemsSource="{Binding Movies}" x:Name="MyList"
+                          LastScrollDirection="{Binding ScrollingDirection,Mode=OneWayToSource}"
+                          AtStartOfList="{Binding IsAtStartOfList,Mode=OneWayToSource}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Name}" Detail="{Binding Rating, StringFormat='I give it {0} out of 5'}"></TextCell>
@@ -19,3 +21,4 @@
     </StackLayout>
 
 </ContentPage>
+    
