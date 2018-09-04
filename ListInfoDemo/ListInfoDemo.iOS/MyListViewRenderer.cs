@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ListInfoDemo;
 using ListInfoDemo.iOS;
 using Xamarin.Forms;
@@ -12,19 +12,39 @@ namespace ListInfoDemo.iOS
     {
         private double _prevYOffset;
         private IDisposable _offsetObserver;
+        private MyListView _myListView;
 
         protected override void OnElementChanged(ElementChangedEventArgs<ListView> e)
         {
             base.OnElementChanged(e);
+            if (e.OldElement == _myListView)
+                _myListView = null;
+
             if (e.NewElement is MyListView)
             {
-                var myList = Element as MyListView;
+                _myListView = Element as MyListView;
 
-                myList.LastScrollDirection = MyListView.NoPreviousScroll;
-                myList.AtStartOfList = true;
+                _myListView.LastScrollDirection = MyListView.NoPreviousScroll;
+                _myListView.AtStartOfList = true;
 
                 _offsetObserver = Control.AddObserver("contentOffset", Foundation.NSKeyValueObservingOptions.New, HandleAction);
             }
+        }
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (_myListView != null)
+                _myListView.AtEndOfList = IsAtEndOfList();
+        }
+
+        private bool IsAtEndOfList()
+        {
+            // Strictly speaking, the '- 10' is not necessary, but gives a little better experience,
+            // since it generally means that the last element is visible. It is possible to more directly
+            // check for that condition, or to remove the '- 10' entirely, depending on needs.
+            return Control.Frame.Height + Control.ContentOffset.Y >= Control.ContentSize.Height - 10;
         }
 
         private static bool CloseTo(double x, double y)
@@ -35,14 +55,14 @@ namespace ListInfoDemo.iOS
         private void HandleAction(Foundation.NSObservedChange obj)
         {
             var effectiveY = Math.Max(Control.ContentOffset.Y, 0);
-            if (!CloseTo(effectiveY, _prevYOffset) && Element is MyListView)
+            if (!CloseTo(effectiveY, _prevYOffset) && _myListView != null)
             {
                 var direction = effectiveY > _prevYOffset ? MyListView.ScrollToEnd : MyListView.ScrollToStart;
-                var myList = Element as MyListView;
-                myList.LastScrollDirection = direction;
+                _myListView.LastScrollDirection = direction;
                 _prevYOffset = effectiveY;
 
-                myList.AtStartOfList = CloseTo(effectiveY, 0);
+                _myListView.AtStartOfList = CloseTo(effectiveY, 0);
+                _myListView.AtEndOfList = IsAtEndOfList();
             }
         }
 

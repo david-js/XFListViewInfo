@@ -17,6 +17,8 @@ namespace ListInfoDemo
             BindableProperty.Create(nameof(LastScrollDirection), typeof(string), typeof(MyListView), null);
         public static readonly BindableProperty AtStartOfListProperty =
             BindableProperty.Create(nameof(AtStartOfList), typeof(bool), typeof(MyListView), false);
+        public static readonly BindableProperty AtEndOfListProperty =
+            BindableProperty.Create(nameof(AtEndOfList), typeof(bool), typeof(MyListView), false);
 
         // Keep track of previous state and when the next time the reported value might change.
         // _nextShowChange is stored to allow a delay before a change in the value is allowed to avoid a jittery look.
@@ -53,6 +55,15 @@ namespace ListInfoDemo
             set {
                 SetValue(AtStartOfListProperty, value);
                 OnPropertyChanged(nameof(ShouldShowSearchBar));
+            }
+        }
+
+        public bool AtEndOfList
+        {
+            get { return (bool)GetValue(AtEndOfListProperty); }
+            set
+            {
+                SetValue(AtEndOfListProperty, value);
             }
         }
     }

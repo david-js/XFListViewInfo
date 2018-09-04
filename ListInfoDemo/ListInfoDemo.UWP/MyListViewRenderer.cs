@@ -20,17 +20,21 @@ namespace ListInfoDemo.UWP
     {
         private double _prevVerticalOffset;
         private ScrollViewer _scrollViewer;
+        private MyListView _myListView;
 
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.ListView> e)
         {
             base.OnElementChanged(e);
 
+            if (e.OldElement == _myListView)
+                _myListView = null;
+
             if (e.NewElement is MyListView)
             {
-                var myList = Element as MyListView;
+                _myListView = Element as MyListView;
 
-                myList.LastScrollDirection = MyListView.NoPreviousScroll;
-                myList.AtStartOfList = true;
+                _myListView.LastScrollDirection = MyListView.NoPreviousScroll;
+                _myListView.AtStartOfList = true;
 
                 List.PointerEntered += List_PointerEntered;
             }
@@ -40,20 +44,24 @@ namespace ListInfoDemo.UWP
         {
             _scrollViewer = GetScrollViewer(List);
             if (_scrollViewer != null)
+            {
+                _myListView.AtEndOfList = (_scrollViewer.ViewportHeight + _scrollViewer.VerticalOffset) >= _scrollViewer.ExtentHeight;
                 _scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            }
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if (Element is MyListView)
+            if (_myListView != null)
             {
-                var myList = Element as MyListView;
-
                 if (_prevVerticalOffset != _scrollViewer.VerticalOffset)
                 {
                     var direction = _scrollViewer.VerticalOffset > _prevVerticalOffset ? MyListView.ScrollToEnd : MyListView.ScrollToStart;
-                    myList.LastScrollDirection = direction;
-                    myList.AtStartOfList = (_scrollViewer.VerticalOffset == 0);
+                    _myListView.LastScrollDirection = direction;
+                    _myListView.AtStartOfList = (_scrollViewer.VerticalOffset == 0);
+                    // Because of the way that UWP measures sizes, it's difficult to get to *exactly* the end,
+                    // but the measures end up being close, so add a small adjustment (we use 5, but YMMV).
+                    _myListView.AtEndOfList = (_scrollViewer.ViewportHeight + _scrollViewer.VerticalOffset + 5) >= _scrollViewer.ExtentHeight;
                     _prevVerticalOffset = _scrollViewer.VerticalOffset;
                 }
             }
