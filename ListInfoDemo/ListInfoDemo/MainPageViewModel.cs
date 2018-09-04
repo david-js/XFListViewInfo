@@ -35,6 +35,23 @@ namespace ListInfoDemo
             }
         }
 
+        private bool _isAtEndOfList;
+        public bool IsAtEndOfList
+        {
+            get
+            {
+                return _isAtEndOfList;
+            }
+            set
+            {
+                if (value != _isAtEndOfList)
+                {
+                    _isAtEndOfList = value;
+                    NotifyChanged();
+                }
+            }
+        }
+
         private string _lastScrollDirection;
         public string ScrollingDirection
         {
